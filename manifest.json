@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Review Author",
+  "version": "1.0",
+  "description": "Generates a review of the product on the open Amazon product page.",
+  "permissions": [
+    "activeTab",
+    "declarativeNetRequestWithHostAccess",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://localhost:11434/*",
+    "http://127.0.0.1:11434/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ollama_origin_rules",
+        "enabled": true,
+        "path": "rules/ollama-origin.json"
+      }
+    ]
+  }
+}

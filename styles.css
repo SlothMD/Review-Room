@@ -1,0 +1,46 @@
+body {
+  width: 780px;
+  max-width: 780px;
+  font-family: sans-serif;
+}
+
+.container {
+  padding: 10px;
+}
+
+h1 {
+  font-size: 18px;
+  margin-top: 0;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+textarea, select, input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input {
+  padding: 8px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #eee;
+  cursor: pointer;
+}
+
+.feedback-group {
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+  margin-top: 10px;
+}
