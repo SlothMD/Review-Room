@@ -5,7 +5,7 @@
   "description": "Generates a review of the product on the open Amazon product page.",
   "permissions": [
     "activeTab",
-    "declarativeNetRequestWithHostAccess",
+    "clipboardWrite",
     "scripting",
     "storage"
   ],
@@ -25,14 +25,5 @@
     "16": "images/icon16.png",
     "48": "images/icon48.png",
     "128": "images/icon128.png"
-  },
-  "declarative_net_request": {
-    "rule_resources": [
-      {
-        "id": "ollama_origin_rules",
-        "enabled": true,
-        "path": "rules/ollama-origin.json"
-      }
-    ]
   }
 }

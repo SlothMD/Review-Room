@@ -10,8 +10,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const guidance = document.getElementById('guidance');
   const OLLAMA_BASE_URL = 'http://localhost:11434';
   const defaultGuidance = {
-    "Format": "Return separate fields for suggested stars, generated review, and title. The generated review must be plain text only: no greeting, intro, markdown, bullets, headers, rating, summary, or sign-off. Write 2-4 short paragraphs unless the user's notes clearly call for a different shape.",
+    "Format": "Return separate fields for suggested stars, generated review, and title. The generated review must be plain text only: no greeting, intro, markdown, bullets, headers, rating, summary, or sign-off. Write 2-3 natural paragraphs. Paragraph 1 should describe the actual experience or first impression based on the reviewer notes. Paragraph 2 should explain the most important practical details, tradeoffs, or use-case fit. Paragraph 3 is optional and should only be used if there is a clear final judgment.",
     "Priority": "The user's reviewer comments are the source of truth. Use the product page only for factual context such as product type, size, materials, features, or names. Do not repeat marketing claims unless the user's notes support them.",
+    "ReviewerVoice": "When the reviewer notes include a narrative aside, dry joke, sarcastic observation, wry phrasing, or specific angle, preserve that idea and work it into the generated review naturally. Treat those comments as intentional voice cues, not disposable notes.",
+    "Depth": "Be more narrative than terse. Expand on implications of the reviewer notes, but do not invent facts, usage details, defects, ownership duration, or personal experience. If notes are sparse, use careful phrasing such as 'seems,' 'looks,' or 'for this use case' instead of making claims.",
     "Tone": "Smart, direct, conversational, and dry. Warm but not polished into corporate oatmeal. Use subtle humor only when it fits. Prefer plain words, varied sentence length, and a real-person review voice.",
     "Avoid": "No preamble such as 'Okay, here's a review.' No markdown. No bold text. No pros/cons list unless the user specifically asks for it. No sales-copy phrasing, inflated praise, or manufacturer-style feature dumping.",
     "Constraints": "Keep it suitable for Amazon. Do not mention receiving guidance, using AI, the product listing, or the user's notes."
@@ -117,6 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
           suggestedStars.value = result.suggestedStars;
           generatedReview.value = result.generatedReview;
           reviewTitle.value = result.title;
+          await copyReviewForPasting(result);
         } catch (error) {
           console.error('Error generating review:', error);
           setOutputError(`Error generating review: ${formatGenerationError(error)}`);
@@ -153,7 +156,7 @@ function upgradeGuidance(savedGuidance, defaultGuidance) {
   try {
     const parsed = JSON.parse(savedGuidance);
 
-    if (parsed.Priority && parsed.Avoid) {
+    if (parsed.Priority && parsed.Avoid && parsed.Depth && parsed.ReviewerVoice) {
       return savedGuidance;
     }
 
@@ -198,8 +201,9 @@ Title: ${productInfo.title}
 Description: ${productInfo.description || '(none found)'}
 
 If the reviewer notes conflict with the product page, follow the reviewer notes. If the page has details not mentioned in the notes, include them only when they support the review naturally.
+If the reviewer notes include a narrative comment, dry joke, sarcastic observation, wry phrasing, or specific angle, incorporate that idea into generatedReview. Do not flatten it into generic product commentary.
 For suggestedStars, infer the rating from the reviewer notes. Use a whole number from 1 to 5 as a string. If the notes are mixed, choose the honest middle value instead of defaulting high.
-For generatedReview, write only the review body.
+For generatedReview, write only the review body. It must contain at least 2 real paragraphs separated by a blank line unless the reviewer notes are empty. Do not satisfy this by splitting one sentence into multiple paragraphs.
 For title, write a short Amazon review title that sounds like a real customer, not an ad.
   `.trim();
 }
@@ -295,6 +299,18 @@ function cleanSingleLineText(text) {
   return cleanReviewText(text).replace(/\s+/g, ' ').trim();
 }
 
+async function copyReviewForPasting(result) {
+  const packedReview = [result.title, result.generatedReview]
+    .filter(Boolean)
+    .join('\r\n\r\n');
+
+  if (!packedReview) {
+    return;
+  }
+
+  await navigator.clipboard.writeText(packedReview);
+}
+
 function cleanReviewText(text) {
   return String(text || '')
     .replace(/\r\n/g, '\n')
@@ -315,7 +331,7 @@ function cleanReviewText(text) {
 
 function formatGenerationError(error) {
   if (error.status === 403) {
-    return 'Ollama rejected the request origin. Reload the extension in chrome://extensions so the localhost Origin rewrite rule is active, then try again.';
+    return 'Ollama rejected the Chrome extension origin. Quit Ollama from the tray, run restart-ollama-for-extension.cmd as administrator, then reload the extension.';
   }
 
   return error.message;

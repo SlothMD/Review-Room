@@ -12,17 +12,17 @@ The extension is ready for local testing.
 - Amazon page scraping is limited to product title and description/bullets for factual context.
 - Reviewer notes are weighted above listing text to avoid marketing-copy output.
 - Generated output is split into Suggested Stars, Generated Review, and Title.
+- Generated title and review body are copied to the clipboard automatically as `Title`, blank line, then `Generated Review`.
 - Generated review/title text is scrubbed into plain text by removing common LLM preambles, Markdown headings, bold/italic markup, bullets, numbered lists, and dividers.
-- A Chrome `declarativeNetRequest` rule rewrites localhost Ollama request origins to avoid Ollama rejecting `chrome-extension://` requests.
+- `restart-ollama-for-extension.cmd` configures Ollama to accept browser extension origins.
 
 ## Files
 
-- `manifest.json`: Chrome MV3 configuration, permissions, icons, host access, and network rewrite rule registration.
+- `manifest.json`: Chrome MV3 configuration, permissions, icons, and host access.
 - `popup.html`: Extension popup markup.
 - `popup.js`: Ollama model loading, product-page scraping, prompt building, review generation, guidance migration, and plain-text cleanup.
 - `styles.css`: Popup layout and styling.
 - `content.js`: Minimal product-info helper retained for compatibility.
-- `rules/ollama-origin.json`: Chrome network rules that rewrite Ollama request origins to localhost.
 - `restart-ollama-for-extension.cmd`: Optional helper to set `OLLAMA_ORIGINS` and restart Ollama on Windows.
 - `images/`: Extension icons.
 
@@ -72,11 +72,17 @@ The popup returns three separate boxes:
 - `Generated Review`: The plain-text review body.
 - `Title`: A short plain-text review title.
 
+After generation completes, the extension automatically copies the title and review body to the clipboard in this format:
+
+```text
+Title
+
+Generated Review
+```
+
 ## Ollama Origin Handling
 
-The extension includes a Chrome network rule that rewrites extension requests to Ollama so Ollama sees a localhost origin instead of a `chrome-extension://` origin.
-
-If a machine still returns HTTP 403 from Ollama, run:
+Ollama must allow requests from browser extension origins. Run:
 
 ```cmd
 restart-ollama-for-extension.cmd
@@ -98,11 +104,14 @@ The default guidance is designed to produce structured, paste-ready review field
 - No Markdown.
 - No headers, bullets, rating, or sign-off.
 - Reviewer notes are treated as the source of truth.
+- Narrative asides, dry jokes, sarcastic observations, wry phrasing, and specific angles in reviewer notes are preserved and worked into the review.
 - Product-page text is used only as factual context.
+- Generated reviews are nudged toward 2-3 real paragraphs: first impression or experience, practical details or tradeoffs, and an optional final judgment.
+- Sparse notes should be expanded through implications and careful phrasing, not invented facts or personal experience.
 - The voice should sound like a real person reviewing the item, not a manufacturer selling it.
 - Suggested stars, generated review, and title are requested as JSON internally, then displayed as separate fields.
 
-Existing saved guidance is automatically upgraded when it lacks the newer `Priority` and `Avoid` fields.
+Existing saved guidance is automatically upgraded when it lacks the newer `Priority`, `Avoid`, `Depth`, or `ReviewerVoice` fields.
 
 ## Validation
 
@@ -111,12 +120,11 @@ Run these checks from the project root:
 ```cmd
 node --check popup.js
 node --check content.js
-node -e "JSON.parse(require('fs').readFileSync('manifest.json','utf8')); JSON.parse(require('fs').readFileSync('rules/ollama-origin.json','utf8')); console.log('json ok')"
+node -e "JSON.parse(require('fs').readFileSync('manifest.json','utf8')); console.log('manifest json ok')"
 ```
 
 ## Known Limitations
 
-- The project is not currently initialized as a Git repository in this directory.
 - The popup depends on a local Ollama server being reachable at `localhost:11434`.
 - Amazon markup changes may require updating selectors in `scrapeProductInfo`.
 - The plain-text scrubber removes common Markdown patterns but is intentionally conservative to avoid damaging normal review text.
