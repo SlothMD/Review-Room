@@ -1,0 +1,21 @@
+version: 1
+updated: 2026-06-15
+commands:
+  - id: syntax-popup
+    command: node --check popup.js
+    purpose: Validate popup JavaScript parses before loading the extension.
+  - id: syntax-review-core
+    command: node --check review-core.js
+    purpose: Validate shared review generation JavaScript parses.
+  - id: syntax-review-workspace
+    command: node --check review.js
+    purpose: Validate full-tab review workspace JavaScript parses.
+  - id: syntax-content
+    command: node --check content.js
+    purpose: Validate content helper JavaScript parses.
+  - id: manifest-json
+    command: node -e "JSON.parse(require('fs').readFileSync('manifest.json','utf8')); console.log('manifest json ok')"
+    purpose: Validate the Chrome extension manifest is valid JSON.
+  - id: manual-extension-smoke
+    command: Load unpacked extension in Chrome, open an Amazon product page, select an Ollama model, enter reviewer notes, run Create Review, and confirm the review workspace tab opens with suggested stars, title, review body, copy controls, feedback regeneration controls, missing-topic input, and follow-up question controls.
+    purpose: End-to-end browser smoke test that cannot be fully covered by current command-line checks.

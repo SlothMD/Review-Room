@@ -1,0 +1,32 @@
+version: 1
+updated: 2026-06-15
+open_questions:
+  - id: browser-support
+    status: answered
+    question: Should Review Author officially support only Chrome, or also Edge and Firefox-compatible extension builds?
+    answer: Chrome-only is fine for the MVP.
+  - id: model-provider-scope
+    status: answered
+    question: Should Ollama remain the only supported model provider, or should the architecture plan for additional local or hosted providers?
+    answer: Plan for hosted and pluggable providers, but do not implement provider abstraction for MVP.
+  - id: release-workflow
+    status: answered
+    question: Should releases be distributed as unpacked local folders, zipped extension packages, or through browser extension stores?
+    answer: Unpacked folder distribution is fine for the MVP.
+  - id: review-data-retention
+    status: answered
+    question: Should generated reviews remain transient only, or should the app add optional local history?
+    answer: Review history should definitely be planned.
+  - id: history-storage-scope
+    status: open
+    question: Should planned review history use chrome.storage.local only, exported local files, or another local persistence strategy?
+    note: Leave open for now and decide later based on best-practice recommendations; not a near-term priority.
+  - id: full-tab-url-shape
+    status: answered
+    question: Should the generated review workspace be a packaged extension page such as review.html, or a generated tab/document view?
+    note: Open to best-practice recommendation; choose the cleanest short path to the desired durable-tab functionality during implementation planning.
+    answer: Implemented as a packaged extension page, `review.html`, opened with a storage.local session id.
+  - id: follow-up-question-strategy
+    status: answered
+    question: Should follow-up questions be deterministic prompts from missing product-review dimensions, model-generated questions, or both?
+    answer: Use model-generated follow-up questions shaped as: what questions would a good review of this product answer that were not covered in the original pass?

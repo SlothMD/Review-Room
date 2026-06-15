@@ -1,0 +1,15 @@
+version: 1
+updated: 2026-06-15
+assumptions:
+  - id: chrome-primary
+    status: verified
+    summary: Chrome is the current MVP browser target.
+  - id: review-history-planned
+    status: verified
+    summary: Review history should be planned, with implementation details still open.
+  - id: no-build-step
+    status: unverified
+    summary: The repo should stay usable as a load-unpacked extension with no build step unless a future change justifies one.
+  - id: ollama-mvp-provider
+    status: verified
+    summary: Ollama remains the MVP provider while planning should allow future hosted or pluggable providers.

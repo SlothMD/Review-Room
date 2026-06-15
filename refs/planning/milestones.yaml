@@ -1,0 +1,11 @@
+version: 1
+updated: 2026-06-15
+milestones:
+  - id: local-extension-ready
+    status: planned
+    target: owner-confirmed
+    summary: Extension can be loaded locally, generate a review from an Amazon page through Ollama, and pass documented validation.
+    exit_criteria:
+      - Syntax validation commands pass.
+      - Manual extension smoke test passes on a real Amazon product page.
+      - Owner confirms open harness decisions or accepts them as tracked questions.

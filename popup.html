@@ -19,27 +19,15 @@
     </div>
     <button id="create-review">Create Review</button>
     <div class="form-group">
-      <label for="suggested-stars">Suggested Stars:</label>
-      <input id="suggested-stars" type="text" readonly>
-    </div>
-    <div class="form-group">
-      <label for="generated-review">Generated Review:</label>
-      <textarea id="generated-review" rows="10" readonly></textarea>
-    </div>
-    <div class="form-group">
-      <label for="review-title">Title:</label>
-      <input id="review-title" type="text" readonly>
-    </div>
-    <div class="form-group feedback-group">
-      <label for="feedback">Feedback on Quality:</label>
-      <textarea id="feedback" rows="2"></textarea>
-      <button id="update-guidance">Update Guidance & Regenerate</button>
+      <label for="generation-status">Status:</label>
+      <textarea id="generation-status" rows="5" readonly></textarea>
     </div>
     <div class="form-group">
       <label for="guidance">Guidance (JSON):</label>
       <textarea id="guidance" rows="5"></textarea>
     </div>
   </div>
+  <script src="review-core.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

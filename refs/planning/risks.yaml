@@ -1,0 +1,18 @@
+version: 1
+updated: 2026-06-15
+risks:
+  - id: amazon-markup-changes
+    status: open
+    severity: medium
+    summary: Amazon page selectors can change and break product context scraping.
+    mitigation: Keep scraping selectors isolated and include manual smoke tests on real product pages.
+  - id: ollama-origin-rejection
+    status: open
+    severity: medium
+    summary: Ollama may reject extension-origin requests if OLLAMA_ORIGINS is not configured.
+    mitigation: Maintain restart-ollama-for-extension.cmd and troubleshooting docs.
+  - id: malformed-model-json
+    status: open
+    severity: medium
+    summary: Local models may return malformed JSON or preamble text.
+    mitigation: Keep JSON extraction and cleanup logic covered by validation or tests.

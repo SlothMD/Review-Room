@@ -1,0 +1,21 @@
+version: 1
+updated: 2026-06-15
+boundaries:
+  - id: reviewer-notes-vs-product-context
+    status: active
+    owner_area: extension-runtime
+    rules:
+      - Reviewer notes control sentiment, rating, and personal experience.
+      - Amazon page text is factual context only.
+  - id: local-model-boundary
+    status: active
+    owner_area: local-ollama
+    rules:
+      - Generation requests are sent to local Ollama only.
+      - Hosted provider calls require an explicit decision.
+  - id: persistence-boundary
+    status: active
+    owner_area: extension-runtime
+    rules:
+      - Persist selected model and guidance only.
+      - Do not persist reviewer notes or generated reviews without a new product decision.

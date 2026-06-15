@@ -1,0 +1,23 @@
+version: 1
+updated: 2026-06-15
+components:
+  model-select:
+    rules:
+      - Shows available local Ollama models.
+      - Shows a clear unavailable state when Ollama is not running.
+  reviewer-comments:
+    rules:
+      - Captures user notes as the source of truth for generation.
+  output-fields:
+    rules:
+      - Keep suggested stars, title, and generated review separate.
+      - Keep generated text plain and paste-ready.
+  review-workspace-actions:
+    rules:
+      - Include copy controls for title, review body, and combined paste-ready output.
+      - Include regenerate controls that preserve original notes and product context.
+      - Include clear affordances for feedback, missing keyword/topic input, and follow-up answers.
+  review-history:
+    rules:
+      - Planned component for recovering prior drafts and iterations.
+      - Must include deletion behavior before history is considered complete.

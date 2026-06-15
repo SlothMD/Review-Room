@@ -1,0 +1,13 @@
+version: 1
+updated: 2026-06-15
+rules:
+  - id: block-invalid-context
+    summary: Do not generate unless a model is selected and the active tab is an Amazon product page.
+  - id: stream-progress
+    summary: Show generation progress in the review field while Ollama streams output.
+  - id: copy-after-success
+    summary: Copy title and review body to the clipboard only after successful parsing and cleanup.
+  - id: open-full-tab-after-generation
+    summary: After generation, open or focus a Chrome tab that preserves the generated review state outside the popup lifecycle.
+  - id: regenerate-with-context
+    summary: Regeneration should include original reviewer notes, product context, previous draft, explicit feedback, missing keyword/topic entries, and follow-up answers.

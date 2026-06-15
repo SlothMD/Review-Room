@@ -1,0 +1,11 @@
+version: 1
+updated: 2026-06-15
+entries:
+  - date: 2026-06-15
+    summary: Initialized Agent-Academy refs harness for Review Author from SlothMD/Agent-Academy commit 608f593.
+  - date: 2026-06-15
+    summary: Recorded owner decisions for Chrome-only MVP, unpacked-folder distribution, planned provider abstraction, planned review history, and planned full-tab review workspace.
+  - date: 2026-06-15
+    summary: Refined planning for history storage as low-priority/open, full-tab shape as best-practice implementation choice, and follow-up questions as model-generated review-gap questions.
+  - date: 2026-06-15
+    summary: Implemented extension-owned review.html workspace tab with storage.local pending-session handoff, durable-tab initial generation, copy controls, feedback regeneration, missing-topic input, model-generated follow-up questions, and shared review-core.js generation helpers.

@@ -1,0 +1,30 @@
+version: 1
+updated: 2026-06-15
+identity:
+  name: Review Author
+  repository_url: https://github.com/SlothMD/Review-Room
+  summary: Chrome Manifest V3 extension that drafts Amazon product reviews from reviewer notes, Amazon page context, and a local Ollama model.
+  current_phase: local-testing
+thesis:
+  core_promise: Help a reviewer turn notes and product-page context into paste-ready Amazon review fields while preserving the reviewer voice and avoiding marketing-copy output.
+audience:
+  primary_users:
+    - Amazon reviewers who want faster first drafts from their own notes.
+    - Local-first users who prefer running review generation through Ollama instead of hosted AI services.
+stack:
+  summary: Plain JavaScript Chrome MV3 extension with popup UI, activeTab scripting, chrome.storage.sync persistence, clipboard writes, and local Ollama HTTP API calls.
+repository_layout:
+  source_roots:
+    - .
+  docs_roots:
+    - refs
+source_of_truth:
+  planning: refs/planning
+  architecture: refs/architecture
+  product: refs/product
+  implementation: refs/implementation
+  handoffs: refs/handoffs
+  testing: refs/testing
+  ui: refs/UI
+known_open_questions:
+  - What local persistence strategy should planned review history use?

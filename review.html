@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Review Author Workspace</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body class="workspace-body">
+  <main class="workspace-shell">
+    <header class="workspace-header">
+      <div>
+        <h1>Review Author</h1>
+        <p id="product-title" class="workspace-subtitle"></p>
+      </div>
+      <div class="workspace-actions">
+        <button id="copy-all" type="button">Copy Review</button>
+        <button id="copy-title" type="button">Copy Title</button>
+        <button id="copy-body" type="button">Copy Body</button>
+      </div>
+    </header>
+
+    <section class="workspace-grid">
+      <div class="workspace-main">
+        <div class="form-group">
+          <label for="review-title">Title:</label>
+          <input id="review-title" type="text">
+        </div>
+        <div class="form-group">
+          <label for="suggested-stars">Suggested Stars:</label>
+          <input id="suggested-stars" type="text">
+        </div>
+        <div class="form-group">
+          <label for="generated-review">Generated Review:</label>
+          <textarea id="generated-review" rows="16"></textarea>
+        </div>
+        <div class="status-line" id="status-line"></div>
+      </div>
+
+      <aside class="workspace-side">
+        <div class="form-group">
+          <label for="feedback">Feedback for Regeneration:</label>
+          <textarea id="feedback" rows="5"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="missing-topics">Missing Amazon Keywords or Topics:</label>
+          <textarea id="missing-topics" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="follow-up-questions">Follow-Up Questions:</label>
+          <textarea id="follow-up-questions" rows="6" readonly></textarea>
+          <button id="ask-follow-ups" type="button">Ask Follow-Up Questions</button>
+        </div>
+        <div class="form-group">
+          <label for="follow-up-answers">Follow-Up Answers:</label>
+          <textarea id="follow-up-answers" rows="6"></textarea>
+        </div>
+        <button id="regenerate-review" type="button">Regenerate Review</button>
+      </aside>
+    </section>
+  </main>
+
+  <script src="review-core.js"></script>
+  <script src="review.js"></script>
+</body>
+</html>

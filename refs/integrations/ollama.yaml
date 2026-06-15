@@ -1,0 +1,14 @@
+version: 1
+updated: 2026-06-15
+integration:
+  id: ollama
+  status: active
+  mode: local-http
+  base_url: http://localhost:11434
+  config_fields:
+    - OLLAMA_ORIGINS
+  endpoints:
+    - /api/tags
+    - /api/generate
+  notes:
+    - Browser extension origins may require OLLAMA_ORIGINS to include chrome-extension://*.

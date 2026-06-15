@@ -1,0 +1,9 @@
+version: 1
+updated: 2026-06-15
+tokens:
+  colors:
+    source: styles.css
+  spacing:
+    source: styles.css
+  typography:
+    source: styles.css

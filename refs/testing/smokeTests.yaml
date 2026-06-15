@@ -1,0 +1,18 @@
+version: 1
+updated: 2026-06-15
+smoke_tests:
+  - id: local-generation-flow
+    status: active
+    summary: Load the unpacked extension in Chrome, open an Amazon product page, select an Ollama model, enter reviewer notes, and confirm review output plus clipboard copy.
+  - id: ollama-unavailable-flow
+    status: active
+    summary: With Ollama stopped, open the popup and confirm the model selector communicates that Ollama must be started.
+  - id: non-amazon-page-flow
+    status: active
+    summary: Open a non-Amazon page, click Create Review, and confirm the extension asks for an Amazon product page.
+  - id: full-tab-review-workspace-flow
+    status: active
+    summary: Generate a review and confirm a Chrome tab opens with title, review body, suggested stars, copy controls, and regeneration controls that remain available after the popup closes.
+  - id: feedback-regeneration-flow
+    status: active
+    summary: Enter feedback, missing keywords/topics, and follow-up answers in the review workspace, regenerate, and confirm the new draft uses that context.

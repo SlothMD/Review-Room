@@ -1,0 +1,7 @@
+version: 1
+updated: 2026-06-15
+integration:
+  id: gltfTransform
+  status: inactive
+  mode: not-used
+  config_fields: []

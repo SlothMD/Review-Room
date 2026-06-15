@@ -1,0 +1,9 @@
+version: 1
+updated: 2026-06-15
+glossary:
+  - term: Reviewer notes
+    definition: User-entered comments that act as the source of truth for sentiment, experience, and rating.
+  - term: Product context
+    definition: Title and description or bullet text scraped from the active Amazon product page.
+  - term: Guidance
+    definition: Editable JSON instructions stored in chrome.storage.sync and included in the generation prompt.

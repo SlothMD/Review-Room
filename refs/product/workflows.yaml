@@ -1,0 +1,19 @@
+version: 1
+updated: 2026-06-15
+workflows:
+  - id: create-amazon-review
+    steps:
+      - Start Ollama with at least one local model installed.
+      - Load the extension unpacked in Chrome.
+      - Open an Amazon product page.
+      - Open the extension popup and select an Ollama model.
+      - Enter reviewer notes and create the review.
+      - Review suggested stars, title, and body before pasting into Amazon.
+  - id: full-tab-review-iteration
+    steps:
+      - Generate an initial review from the popup.
+      - Extension opens a durable Chrome tab containing the generated title, review body, suggested stars, and operation buttons.
+      - User reviews the draft without losing output when changing browser focus.
+      - User optionally adds feedback, missing Amazon keywords/topics, or answers follow-up questions.
+      - Tool regenerates an improved version while preserving the original context and previous draft for comparison or history.
+      - User copies or uses the final review output.

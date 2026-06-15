@@ -1,0 +1,15 @@
+version: 1
+updated: 2026-06-15
+integrations:
+  - id: chrome-extension-apis
+    mode: browser-runtime
+    status: active
+    config_source: manifest.json
+  - id: ollama
+    mode: local-http
+    status: active
+    config_source: popup.js and restart-ollama-for-extension.cmd
+  - id: amazon-product-pages
+    mode: active-tab-dom-read
+    status: active
+    config_source: popup.js selectors

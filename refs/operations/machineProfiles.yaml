@@ -1,0 +1,10 @@
+version: 1
+updated: 2026-06-15
+machine_profiles:
+  - id: windows-local-dev
+    status: active
+    tools:
+      - Chrome or Chromium browser
+      - Ollama
+      - Node.js for validation commands
+      - Git

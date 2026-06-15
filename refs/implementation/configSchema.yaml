@@ -1,0 +1,18 @@
+version: 1
+updated: 2026-06-15
+config:
+  chrome_storage_sync:
+    status: active
+    purpose: Stores user-editable guidance and selected Ollama model.
+    fields:
+      - guidance
+      - ollamaModel
+  manifest_permissions:
+    status: active
+    purpose: Defines extension permissions and host access for local Ollama.
+    fields:
+      - activeTab
+      - clipboardWrite
+      - scripting
+      - storage
+      - host_permissions

@@ -1,0 +1,6 @@
+version: 1
+updated: 2026-06-15
+accessibility:
+  - Keep form labels associated with popup controls.
+  - Ensure textarea and output fields remain keyboard reachable.
+  - Preserve visible error messages when generation cannot proceed.

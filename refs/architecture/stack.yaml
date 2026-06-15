@@ -1,0 +1,19 @@
+version: 1
+updated: 2026-06-15
+stack:
+  languages:
+    - JavaScript
+    - HTML
+    - CSS
+    - JSON
+    - Windows batch
+  frameworks:
+    - Chrome Manifest V3 extension APIs
+  runtimes:
+    - Chromium browser extension runtime
+    - Local Ollama HTTP API
+    - Node.js for syntax validation commands
+  package_managers: []
+  databases: []
+  deployment_targets:
+    - Load-unpacked local Chrome extension

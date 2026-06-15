@@ -1,0 +1,33 @@
+version: 1
+updated: 2026-06-15
+features:
+  - id: ollama-model-selection
+    status: active
+    summary: Lists locally available Ollama models and stores the selected model.
+  - id: amazon-context-scrape
+    status: active
+    summary: Reads title and description/bullets from the active Amazon product page.
+  - id: guided-review-generation
+    status: active
+    summary: Builds a prompt from reviewer notes, editable guidance, and product context to request JSON output.
+  - id: paste-ready-output
+    status: active
+    summary: Displays suggested stars, generated review, and title, then copies title and body to clipboard.
+  - id: full-tab-review-workspace
+    status: active
+    summary: Opens a durable Chrome tab after generation so the generated review, title, operation buttons, feedback loop, keyword/topic gaps, and follow-up questions survive popup closure.
+  - id: feedback-regeneration
+    status: active
+    summary: Lets the user provide feedback on a generated draft and regenerate an improved version using previous output and original context.
+  - id: amazon-keyword-topic-gaps
+    status: active
+    summary: Lets the user specify Amazon-requested keywords or topics that are missing and should be incorporated naturally into the review.
+  - id: product-follow-up-questions
+    status: active
+    summary: Uses the model to ask what questions a good review of this product would answer that were not covered in the original pass.
+  - id: review-history
+    status: planned
+    summary: Stores local review sessions and iterations so generated content can be recovered and revisited.
+  - id: pluggable-model-providers
+    status: planned
+    summary: Plans a future provider boundary for Ollama plus hosted or pluggable providers, with no MVP implementation required.

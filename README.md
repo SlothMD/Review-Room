@@ -11,8 +11,8 @@ The extension is ready for local testing.
 - Review generation runs from the popup against `http://localhost:11434/api/generate`.
 - Amazon page scraping is limited to product title and description/bullets for factual context.
 - Reviewer notes are weighted above listing text to avoid marketing-copy output.
-- Generated output is split into Suggested Stars, Generated Review, and Title.
-- Generated title and review body are copied to the clipboard automatically as `Title`, blank line, then `Generated Review`.
+- Generated output is opened in a durable review workspace tab and split into Suggested Stars, Generated Review, and Title.
+- The review workspace provides explicit copy buttons for full review, title, and body.
 - Generated review/title text is scrubbed into plain text by removing common LLM preambles, Markdown headings, bold/italic markup, bullets, numbered lists, and dividers.
 - `restart-ollama-for-extension.cmd` configures Ollama to accept browser extension origins.
 
@@ -20,15 +20,23 @@ The extension is ready for local testing.
 
 - `manifest.json`: Chrome MV3 configuration, permissions, icons, and host access.
 - `popup.html`: Extension popup markup.
-- `popup.js`: Ollama model loading, product-page scraping, prompt building, review generation, guidance migration, and plain-text cleanup.
+- `popup.js`: Ollama model loading, product-page scraping, guidance migration, pending session creation, and review workspace tab launch.
+- `review.html`: Durable full-tab review workspace opened after generation.
+- `review.js`: Review workspace behavior, copy controls, feedback regeneration, missing-topic input, follow-up questions, and session persistence.
+- `review-core.js`: Shared Ollama generation, prompt building, JSON parsing, text cleanup, and clipboard helpers.
 - `styles.css`: Popup layout and styling.
 - `content.js`: Minimal product-info helper retained for compatibility.
 - `restart-ollama-for-extension.cmd`: Optional helper to set `OLLAMA_ORIGINS` and restart Ollama on Windows.
 - `images/`: Extension icons.
+- `refs/`: Agent-Academy project-memory harness for durable planning, architecture, testing, operations, and handoff notes.
+
+## Agent-Academy Harness
+
+This repo includes the `refs/` harness initialized from `SlothMD/Agent-Academy`. Agents and collaborators should start with `refs/project.yaml`, `refs/agents.yaml`, `refs/planning/roadmap.yaml`, `refs/planning/todos.yaml`, and `refs/testing/validationCommands.yaml` before making implementation changes.
 
 ## Requirements
 
-- Google Chrome or another Chromium browser with extension developer mode.
+- Google Chrome with extension developer mode.
 - Ollama installed locally.
 - At least one Ollama model pulled locally.
 
@@ -66,13 +74,13 @@ D:\Apps\Review-Author
 
 7. Open the Review Author extension popup, select an Ollama model, add reviewer notes, and click `Create Review`.
 
-The popup returns three separate boxes:
+The popup opens a full-tab review workspace, and the workspace generates the review in that durable tab. The workspace has three editable output fields:
 
 - `Suggested Stars`: A whole-number rating from 1 to 5 inferred from the reviewer notes.
 - `Generated Review`: The plain-text review body.
 - `Title`: A short plain-text review title.
 
-After generation completes, the extension automatically copies the title and review body to the clipboard in this format:
+The review workspace includes copy buttons for the full review, title, and body. The full review copy format is:
 
 ```text
 Title
@@ -119,6 +127,8 @@ Run these checks from the project root:
 
 ```cmd
 node --check popup.js
+node --check review-core.js
+node --check review.js
 node --check content.js
 node -e "JSON.parse(require('fs').readFileSync('manifest.json','utf8')); console.log('manifest json ok')"
 ```

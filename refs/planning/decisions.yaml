@@ -1,0 +1,78 @@
+version: 1
+updated: 2026-06-15
+decisions:
+  - id: local-first-ollama
+    status: accepted
+    date: 2026-06-15
+    decision: Treat Review Author as a local-first extension that uses Ollama on localhost by default.
+    rationale: The existing implementation and README are built around local Ollama model listing and generation.
+    consequences:
+      - Avoid adding hosted AI calls without a new explicit decision.
+      - Keep origin/CORS troubleshooting in local operations docs.
+  - id: agent-academy-refs
+    status: accepted
+    date: 2026-06-15
+    decision: Use the Agent-Academy refs folder as durable project memory for agents and collaborators.
+    rationale: The project owner requested incorporating SlothMD/Agent-Academy.
+    consequences:
+      - Durable planning, architecture, testing, and handoff notes should be updated in refs.
+      - Agents should read refs/project.yaml and refs/agents.yaml before implementation work.
+  - id: chrome-only-mvp
+    status: accepted
+    date: 2026-06-15
+    decision: Target Chrome only for the current MVP.
+    rationale: Chrome-only support is sufficient for now and matches the current MV3 implementation.
+    consequences:
+      - Do not spend MVP effort on Firefox or Edge-specific compatibility.
+      - Keep browser assumptions explicit in testing and release notes.
+  - id: unpacked-folder-mvp
+    status: accepted
+    date: 2026-06-15
+    decision: Distribute and validate the MVP as an unpacked extension folder.
+    rationale: Local load-unpacked use is sufficient for the current project phase.
+    consequences:
+      - Browser store packaging is not required for MVP.
+      - Release checklist should focus on local setup and manual smoke validation.
+  - id: provider-abstraction-planned
+    status: accepted
+    date: 2026-06-15
+    decision: Plan for hosted and pluggable model providers, but do not implement provider abstraction for MVP.
+    rationale: Future flexibility is useful, while the current product remains local Ollama-first.
+    consequences:
+      - Avoid hardening architecture around Ollama-only assumptions where new planning is created.
+      - Keep runtime implementation scoped to Ollama until provider work is explicitly scheduled.
+  - id: review-history-planned
+    status: accepted
+    date: 2026-06-15
+    decision: Plan review history as a future feature.
+    rationale: Preserving generated reviews supports iteration, recovery, and future review refinement workflows.
+    consequences:
+      - Existing no-history assumptions are superseded.
+      - Future architecture should define local persistence, privacy boundaries, retention controls, and deletion behavior.
+  - id: full-tab-review-workspace-planned
+    status: accepted
+    date: 2026-06-15
+    decision: Move generated review, title, and operation buttons into a full Chrome tab review workspace after generation.
+    rationale: Extension popups close when users tab away, which can lose generated output and blocks longer iteration workflows.
+    consequences:
+      - Popup should become the capture/start surface; the full tab should become the review, iteration, feedback, and refinement workspace.
+      - Generated content should survive tab focus changes.
+      - The workspace should support feedback-based regeneration, missing Amazon keyword/topic input, and product follow-up questions.
+  - id: model-generated-follow-up-questions
+    status: accepted
+    date: 2026-06-15
+    decision: Use model-generated follow-up questions for review refinement.
+    rationale: The useful question shape is product-specific: identify what a good review of this product would answer that the original pass did not cover.
+    consequences:
+      - Follow-up prompts should ask the model to compare product context, reviewer notes, and the current draft for missing review dimensions.
+      - Questions should be practical and answerable by the reviewer, not generic review-writing advice.
+      - Follow-up answers should feed regeneration without inventing unsupported personal experience.
+  - id: review-html-workspace
+    status: accepted
+    date: 2026-06-15
+    decision: Implement the durable review workspace as a packaged extension page, `review.html`, opened with a `chrome.storage.local` session id.
+    rationale: This is the clean short path in Chrome MV3: it avoids generated-document fragility, survives popup closure, can reuse extension scripts/styles, and can access extension storage and permissions directly.
+    consequences:
+      - Popup owns capture, initial generation, session creation, and tab launch.
+      - `review.html` owns output review, copy buttons, feedback regeneration, missing-topic input, and follow-up question controls.
+      - Session storage is an implementation detail for workspace handoff, not the final review-history design.

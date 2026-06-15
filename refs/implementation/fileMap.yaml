@@ -1,0 +1,39 @@
+version: 1
+updated: 2026-06-15
+areas:
+  extension-runtime:
+    guidance:
+      - Start with popup.js for popup capture behavior, product scraping, pending session storage, and review workspace tab launch.
+      - Start with review.js and review.html for durable tab initial generation, copy controls, regeneration, missing-topic input, and follow-up questions.
+      - Start with review-core.js for shared prompt construction, Ollama calls, parsing, and cleanup.
+      - Keep manifest permissions narrow and aligned with actual extension behavior.
+    source_roots:
+      - popup.js
+      - review.html
+      - review.js
+      - review-core.js
+      - content.js
+      - manifest.json
+    notes: Browser APIs are Chrome MV3 APIs; there is no bundler or package manager in the current repo.
+  popup-ui:
+    guidance:
+      - Update popup.html and styles.css together when changing visible controls or output fields.
+      - Keep output paste-ready and plain text; avoid adding UI text that describes implementation details.
+    source_roots:
+      - popup.html
+      - styles.css
+    notes: Popup controls include model selection, reviewer comments, guidance feedback, suggested stars, generated review, and title.
+  local-ollama:
+    guidance:
+      - Use http://localhost:11434 as the default local endpoint unless a project decision changes provider configuration.
+      - Keep restart-ollama-for-extension.cmd aligned with extension origin requirements.
+    source_roots:
+      - restart-ollama-for-extension.cmd
+      - popup.js
+    notes: Host permissions cover localhost and 127.0.0.1 Ollama API paths.
+  project-memory:
+    guidance:
+      - Update refs when durable project facts, decisions, validation commands, or handoff state change.
+    source_roots:
+      - refs
+    notes: This folder was initialized from SlothMD/Agent-Academy commit 608f593.

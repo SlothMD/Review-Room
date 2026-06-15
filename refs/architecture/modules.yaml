@@ -1,0 +1,50 @@
+version: 1
+updated: 2026-06-15
+modules:
+  - id: popup-controller
+    name: Popup Controller
+    status: active
+    owner_area: extension-runtime
+    responsibility: Coordinates UI state, saved guidance/model settings, page scraping, review generation, output cleanup, and clipboard copy.
+    dependencies:
+      - Chrome extension APIs
+      - Local Ollama API
+  - id: product-scraper
+    name: Product Scraper
+    status: active
+    owner_area: extension-runtime
+    responsibility: Reads Amazon product title and description/bullets from the active tab for factual context.
+    dependencies:
+      - Amazon page DOM
+      - chrome.scripting
+  - id: ollama-helper
+    name: Ollama Origin Helper
+    status: active
+    owner_area: local-ollama
+    responsibility: Configures Windows Ollama origin settings for browser extension requests.
+    dependencies:
+      - Windows command shell
+      - Ollama process
+  - id: review-workspace
+    name: Full-Tab Review Workspace
+    status: active
+    owner_area: extension-runtime
+    responsibility: Durable Chrome tab for generated review output, title, suggested stars, operation buttons, feedback regeneration, missing keyword/topic input, follow-up questions, and history entry points.
+    dependencies:
+      - Chrome extension APIs
+      - Popup session handoff
+      - review-core.js generation helpers
+  - id: review-history-store
+    name: Review History Store
+    status: planned
+    owner_area: persistence
+    responsibility: Local storage for review sessions, generated drafts, iteration metadata, and deletion/recovery behavior.
+    dependencies:
+      - Chrome storage APIs
+  - id: model-provider-boundary
+    name: Model Provider Boundary
+    status: planned
+    owner_area: generation
+    responsibility: Future interface for Ollama, hosted providers, and pluggable providers.
+    dependencies:
+      - Local Ollama API

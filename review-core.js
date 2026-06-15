@@ -1,0 +1,282 @@
+const REVIEW_AUTHOR_OLLAMA_BASE_URL = 'http://localhost:11434';
+
+function buildPrompt({
+  comments,
+  guidance,
+  productInfo,
+  previousDraft,
+  feedback,
+  missingTopics,
+  followUpAnswers
+}) {
+  const reviewerComments = comments?.trim() || '(No user notes were provided. In this case, write cautiously and avoid inventing personal experience.)';
+  const previousDraftBlock = previousDraft ? `
+
+Previous draft to improve:
+Suggested stars: ${previousDraft.suggestedStars || ''}
+Title: ${previousDraft.title || ''}
+Review:
+${previousDraft.generatedReview || ''}
+` : '';
+  const feedbackBlock = feedback?.trim() ? `
+
+User feedback for this revision:
+${feedback.trim()}
+` : '';
+  const missingTopicsBlock = missingTopics?.trim() ? `
+
+Amazon-requested keywords or topics missing from the current draft. Incorporate these naturally only when supported by the reviewer notes or product context:
+${missingTopics.trim()}
+` : '';
+  const followUpAnswersBlock = followUpAnswers?.trim() ? `
+
+User answers to follow-up questions. Treat these as reviewer notes for this revision:
+${followUpAnswers.trim()}
+` : '';
+
+  return `
+Return only valid JSON with this exact shape:
+{
+  "suggestedStars": "1-5",
+  "generatedReview": "plain text review body",
+  "title": "plain text review title"
+}
+
+Do not include an introduction, explanation, markdown code fence, bullets, headers, or sign-off outside the JSON.
+
+Voice and formatting guidance:
+${guidance}
+
+Reviewer notes. Treat these as the main source of truth and give them more weight than the product page:
+${reviewerComments}
+${previousDraftBlock}${feedbackBlock}${missingTopicsBlock}${followUpAnswersBlock}
+Product page context. Use this only to avoid factual mistakes; do not let it turn the review into marketing copy:
+Title: ${productInfo.title}
+Description: ${productInfo.description || '(none found)'}
+
+If the reviewer notes conflict with the product page, follow the reviewer notes. If the page has details not mentioned in the notes, include them only when they support the review naturally.
+If the reviewer notes include a narrative comment, dry joke, sarcastic observation, wry phrasing, or specific angle, incorporate that idea into generatedReview. Do not flatten it into generic product commentary.
+For suggestedStars, infer the rating from the reviewer notes. Use a whole number from 1 to 5 as a string. If the notes are mixed, choose the honest middle value instead of defaulting high.
+For generatedReview, write only the review body. It must contain at least 2 real paragraphs separated by a blank line unless the reviewer notes are empty. Do not satisfy this by splitting one sentence into multiple paragraphs.
+For title, write a short Amazon review title that sounds like a real customer, not an ad.
+  `.trim();
+}
+
+function buildFollowUpPrompt({ comments, productInfo, currentDraft }) {
+  const reviewerComments = comments?.trim() || '(No user notes were provided.)';
+
+  return `
+Return only valid JSON with this exact shape:
+{
+  "questions": ["question 1", "question 2", "question 3"]
+}
+
+Ask what questions a good review of this specific product would answer that were not covered in the original pass.
+
+Make the questions practical, specific, and answerable by the reviewer. Do not ask generic review-writing questions. Do not ask for facts already covered by the reviewer notes or current draft. Do not ask the reviewer to invent experience they did not have.
+
+Reviewer notes:
+${reviewerComments}
+
+Product context:
+Title: ${productInfo.title}
+Description: ${productInfo.description || '(none found)'}
+
+Current draft:
+Suggested stars: ${currentDraft?.suggestedStars || ''}
+Title: ${currentDraft?.title || ''}
+Review:
+${currentDraft?.generatedReview || ''}
+  `.trim();
+}
+
+async function generateReview({
+  model,
+  comments,
+  guidance,
+  productInfo,
+  previousDraft,
+  feedback,
+  missingTopics,
+  followUpAnswers,
+  onUpdate
+}) {
+  const response = await fetch(`${REVIEW_AUTHOR_OLLAMA_BASE_URL}/api/generate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model,
+      prompt: buildPrompt({
+        comments,
+        guidance,
+        productInfo,
+        previousDraft,
+        feedback,
+        missingTopics,
+        followUpAnswers
+      })
+    })
+  });
+
+  if (!response.ok) {
+    const error = new Error(`Ollama returned HTTP ${response.status}`);
+    error.status = response.status;
+    throw error;
+  }
+
+  const rawResponse = await readOllamaStream(response, text => {
+    if (onUpdate) {
+      onUpdate(extractReviewPreview(text));
+    }
+  });
+
+  return parseGeneratedResult(rawResponse);
+}
+
+async function generateFollowUpQuestions({ model, comments, productInfo, currentDraft }) {
+  const response = await fetch(`${REVIEW_AUTHOR_OLLAMA_BASE_URL}/api/generate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model,
+      prompt: buildFollowUpPrompt({ comments, productInfo, currentDraft })
+    })
+  });
+
+  if (!response.ok) {
+    const error = new Error(`Ollama returned HTTP ${response.status}`);
+    error.status = response.status;
+    throw error;
+  }
+
+  const rawResponse = await readOllamaStream(response);
+  const parsed = JSON.parse(extractJsonObject(rawResponse));
+  const questions = Array.isArray(parsed.questions) ? parsed.questions : [];
+
+  return questions
+    .map(question => cleanSingleLineText(question))
+    .filter(Boolean)
+    .slice(0, 5);
+}
+
+async function readOllamaStream(response, onUpdate) {
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let pending = '';
+  let rawResponse = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+
+    if (done) {
+      break;
+    }
+
+    pending += decoder.decode(value, { stream: true });
+    const lines = pending.split('\n');
+    pending = lines.pop();
+
+    for (const line of lines) {
+      if (!line.trim()) continue;
+
+      const parsed = JSON.parse(line);
+      rawResponse += parsed.response || '';
+      if (onUpdate) {
+        onUpdate(rawResponse);
+      }
+    }
+  }
+
+  if (pending.trim()) {
+    const parsed = JSON.parse(pending);
+    rawResponse += parsed.response || '';
+  }
+
+  return rawResponse;
+}
+
+function parseGeneratedResult(rawResponse) {
+  const parsed = JSON.parse(extractJsonObject(rawResponse));
+
+  return {
+    suggestedStars: cleanStars(parsed.suggestedStars),
+    generatedReview: cleanReviewText(parsed.generatedReview || ''),
+    title: cleanSingleLineText(parsed.title || '')
+  };
+}
+
+function extractJsonObject(text) {
+  const trimmed = String(text || '').trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
+  const start = trimmed.indexOf('{');
+  const end = trimmed.lastIndexOf('}');
+
+  if (start === -1 || end === -1 || end <= start) {
+    throw new Error('Model did not return valid JSON.');
+  }
+
+  return trimmed.slice(start, end + 1);
+}
+
+function extractReviewPreview(rawResponse) {
+  try {
+    const parsed = JSON.parse(extractJsonObject(rawResponse));
+    return cleanReviewText(parsed.generatedReview || '');
+  } catch (error) {
+    return cleanReviewText(rawResponse);
+  }
+}
+
+function cleanStars(value) {
+  const match = String(value || '').match(/[1-5]/);
+  return match ? match[0] : '';
+}
+
+function cleanSingleLineText(text) {
+  return cleanReviewText(text).replace(/\s+/g, ' ').trim();
+}
+
+function packReviewForPasting(result) {
+  return [result.title, result.generatedReview]
+    .filter(Boolean)
+    .join('\r\n\r\n');
+}
+
+async function copyReviewForPasting(result) {
+  const packedReview = packReviewForPasting(result);
+
+  if (!packedReview) {
+    return;
+  }
+
+  await navigator.clipboard.writeText(packedReview);
+}
+
+function cleanReviewText(text) {
+  return String(text || '')
+    .replace(/\r\n/g, '\n')
+    .replace(/^\s*(okay|sure|certainly|absolutely)[,.! ]+\s*(here('|’)s|here is)\s+[^:\n]*:\s*/i, '')
+    .replace(/^\s*here('|’)s\s+[^:\n]*:\s*/i, '')
+    .replace(/^\s*[-*_]{3,}\s*$/gm, '')
+    .replace(/^\s{0,3}#{1,6}\s*/gm, '')
+    .replace(/\*\*([^*\n]+)\*\*/g, '$1')
+    .replace(/\*([^*\n]+)\*/g, '$1')
+    .replace(/__([^_\n]+)__/g, '$1')
+    .replace(/_([^_\n]+)_/g, '$1')
+    .replace(/^\s*[-*+]\s+/gm, '')
+    .replace(/^\s*\d+\.\s+/gm, '')
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+function formatGenerationError(error) {
+  if (error.status === 403) {
+    return 'Ollama rejected the Chrome extension origin. Quit Ollama from the tray, run restart-ollama-for-extension.cmd as administrator, then reload the extension.';
+  }
+
+  return error.message;
+}

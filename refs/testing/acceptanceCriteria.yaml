@@ -1,0 +1,24 @@
+version: 1
+updated: 2026-06-15
+criteria:
+  - id: valid-extension-files
+    status: active
+    summary: JavaScript files parse and `manifest.json` is valid JSON.
+  - id: local-ollama-generation
+    status: active
+    summary: A locally installed Ollama model can generate suggested stars, a plain-text review body, and a title.
+  - id: reviewer-notes-priority
+    status: active
+    summary: Generated output follows reviewer notes over product-page marketing text.
+  - id: no-generated-review-persistence
+    status: superseded
+    summary: Generated reviews and reviewer notes are not persisted by the current implementation; review history is now planned.
+  - id: full-tab-preserves-generated-output
+    status: active
+    summary: After generation, title, review body, suggested stars, and operation buttons remain available in a Chrome tab even when the popup closes.
+  - id: feedback-regeneration-uses-context
+    status: active
+    summary: Regeneration incorporates original reviewer notes, product context, previous draft, user feedback, missing topics, and follow-up answers without inventing unsupported experience.
+  - id: local-history-controls
+    status: planned
+    summary: Review history can recover prior drafts and provides clear deletion behavior.

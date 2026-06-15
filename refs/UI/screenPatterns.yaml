@@ -1,0 +1,7 @@
+version: 1
+updated: 2026-06-15
+patterns:
+  - id: extension-popup
+    summary: Compact capture/start surface for model selection, reviewer notes, and generation kickoff.
+  - id: full-tab-review-workspace
+    summary: Durable extension page for generated output, review operation buttons, iteration feedback, missing keyword/topic entry, follow-up questions, and future history access.

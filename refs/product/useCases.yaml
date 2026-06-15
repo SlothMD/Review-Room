@@ -1,0 +1,18 @@
+version: 1
+updated: 2026-06-15
+use_cases:
+  - id: draft-review-from-notes
+    summary: Draft a natural Amazon review from rough reviewer notes and product context.
+    actors:
+      - local-reviewer
+    outcome: User receives suggested stars, a review title, and a plain-text review body suitable for pasting.
+  - id: preserve-generated-review
+    summary: Preserve generated review output after the extension popup closes.
+    actors:
+      - local-reviewer
+    outcome: User can tab away and return to the generated review in a durable Chrome tab.
+  - id: improve-review-through-feedback
+    summary: Iterate on a generated review using feedback, missing keyword/topic guidance, and targeted product follow-up answers.
+    actors:
+      - local-reviewer
+    outcome: User gets a more complete review while retaining the original notes and prior draft context.

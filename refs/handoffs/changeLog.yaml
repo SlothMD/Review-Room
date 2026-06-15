@@ -1,0 +1,11 @@
+version: 1
+updated: 2026-06-15
+changes:
+  - date: 2026-06-15
+    summary: Added project-memory refs folder and initialized Review Author project, architecture, planning, testing, UI, and operations notes.
+  - date: 2026-06-15
+    summary: Updated planning to add full-tab review workspace, feedback regeneration, Amazon keyword/topic gap input, product follow-up questions, review history, and future provider abstraction.
+  - date: 2026-06-15
+    summary: Clarified follow-up question strategy and kept history storage plus full-tab page shape open for implementation recommendations.
+  - date: 2026-06-15
+    summary: Added durable full-tab review workspace implementation and updated validation docs for review-core.js and review.js.

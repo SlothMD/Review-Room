@@ -1,0 +1,5 @@
+version: 1
+updated: 2026-06-15
+personas:
+  - id: local-reviewer
+    summary: A reviewer who wants fast review drafts while keeping generation local through Ollama.

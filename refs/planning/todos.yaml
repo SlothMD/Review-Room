@@ -1,0 +1,43 @@
+version: 1
+updated: 2026-06-15
+todos:
+  - id: confirm-harness-decisions
+    status: closed
+    area: planning
+    summary: Confirm browser support, provider scope, release process, and data-retention expectations with the project owner.
+  - id: design-full-tab-review-workspace
+    status: closed
+    area: product
+    summary: Define the full-tab review workspace layout, state handoff from popup, operation buttons, and output preservation behavior.
+  - id: plan-feedback-iteration-loop
+    status: closed
+    area: generation
+    summary: Plan regeneration flow where user feedback revises the review while preserving reviewer notes, product context, previous draft, and missing-topic inputs.
+  - id: plan-amazon-keyword-topic-input
+    status: closed
+    area: product
+    summary: Define controls for user-supplied Amazon-requested keywords/topics missing from generated review output.
+  - id: plan-follow-up-questions
+    status: closed
+    area: generation
+    summary: Plan model-generated questions asking what a good review of this product would answer that the original pass did not cover.
+  - id: manual-smoke-full-tab-workspace
+    status: open
+    area: testing
+    summary: Manually verify in Chrome that Create Review opens review.html, initial generation continues in the tab, copy buttons work, follow-up questions generate, and regeneration uses feedback/missing topics/follow-up answers.
+  - id: plan-review-history
+    status: open
+    area: persistence
+    summary: Later, recommend best-practice local history storage, review version model, deletion behavior, privacy boundaries, and UI entry points.
+  - id: plan-provider-interface
+    status: open
+    area: architecture
+    summary: Sketch a future provider boundary for Ollama, hosted providers, and pluggable providers without implementing it for MVP.
+  - id: add-popup-regression-tests
+    status: open
+    area: testing
+    summary: Add automated coverage for prompt construction, JSON extraction, text cleanup, and error formatting if a test runner is introduced.
+  - id: document-manual-smoke-path
+    status: open
+    area: testing
+    summary: Expand manual validation for loading the unpacked extension, selecting an Ollama model, scraping an Amazon page, and copying generated output.

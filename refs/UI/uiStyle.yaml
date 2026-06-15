@@ -1,0 +1,6 @@
+version: 1
+updated: 2026-06-15
+principles:
+  - Keep the popup compact, direct, and utility-focused.
+  - Prioritize readable form controls and paste-ready output fields over decorative layout.
+  - Preserve clear separation between reviewer notes, guidance/feedback, and generated output.
