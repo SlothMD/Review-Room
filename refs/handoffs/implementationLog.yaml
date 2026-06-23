@@ -9,3 +9,5 @@ entries:
     summary: Refined planning for history storage as low-priority/open, full-tab shape as best-practice implementation choice, and follow-up questions as model-generated review-gap questions.
   - date: 2026-06-15
     summary: Implemented extension-owned review.html workspace tab with storage.local pending-session handoff, durable-tab initial generation, copy controls, feedback regeneration, missing-topic input, model-generated follow-up questions, and shared review-core.js generation helpers.
+  - date: 2026-06-23
+    summary: Added prompt and cleanup safeguards against non-standard punctuation, upgraded saved guidance migration for new default fields, and improved workspace button hover and click affordances.

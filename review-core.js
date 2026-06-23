@@ -43,6 +43,7 @@ Return only valid JSON with this exact shape:
 }
 
 Do not include an introduction, explanation, markdown code fence, bullets, headers, or sign-off outside the JSON.
+Use only plain ASCII punctuation available on a standard US keyboard. Do not use em dashes, en dashes, curly quotes, ellipses, bullets, or decorative punctuation. Prefer commas, periods, colons, semicolons, parentheses, or short sentences.
 
 Voice and formatting guidance:
 ${guidance}
@@ -74,6 +75,7 @@ Return only valid JSON with this exact shape:
 Ask what questions a good review of this specific product would answer that were not covered in the original pass.
 
 Make the questions practical, specific, and answerable by the reviewer. Do not ask generic review-writing questions. Do not ask for facts already covered by the reviewer notes or current draft. Do not ask the reviewer to invent experience they did not have.
+Use only plain ASCII punctuation available on a standard US keyboard. Do not use em dashes, en dashes, curly quotes, ellipses, bullets, or decorative punctuation. Prefer commas, periods, colons, semicolons, parentheses, or short sentences.
 
 Reviewer notes:
 ${reviewerComments}
@@ -256,10 +258,10 @@ async function copyReviewForPasting(result) {
 }
 
 function cleanReviewText(text) {
-  return String(text || '')
+  return normalizeKeyboardPunctuation(text)
     .replace(/\r\n/g, '\n')
-    .replace(/^\s*(okay|sure|certainly|absolutely)[,.! ]+\s*(here('|’)s|here is)\s+[^:\n]*:\s*/i, '')
-    .replace(/^\s*here('|’)s\s+[^:\n]*:\s*/i, '')
+    .replace(/^\s*(okay|sure|certainly|absolutely)[,.! ]+\s*(here's|here is)\s+[^:\n]*:\s*/i, '')
+    .replace(/^\s*here's\s+[^:\n]*:\s*/i, '')
     .replace(/^\s*[-*_]{3,}\s*$/gm, '')
     .replace(/^\s{0,3}#{1,6}\s*/gm, '')
     .replace(/\*\*([^*\n]+)\*\*/g, '$1')
@@ -271,6 +273,20 @@ function cleanReviewText(text) {
     .replace(/[ \t]+\n/g, '\n')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
+}
+
+function normalizeKeyboardPunctuation(text) {
+  return String(text || '')
+    .replace(/[\u00a0\u2000-\u200a\u202f\u205f\u3000]/g, ' ')
+    .replace(/[\u2018\u2019\u201a\u201b\u2032]/g, "'")
+    .replace(/[\u201c\u201d\u201e\u201f\u2033]/g, '"')
+    .replace(/[\u2010-\u2015\u2212]/g, ' - ')
+    .replace(/\u2026/g, '...')
+    .replace(/[\u2022\u2023\u25e6\u2043\u2219]/g, '*')
+    .replace(/[\u00ab\u00bb]/g, '"')
+    .replace(/\u2039/g, '<')
+    .replace(/\u203a/g, '>')
+    .replace(/[ \t]{2,}/g, ' ');
 }
 
 function formatGenerationError(error) {

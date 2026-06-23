@@ -117,9 +117,10 @@ The default guidance is designed to produce structured, paste-ready review field
 - Generated reviews are nudged toward 2-3 real paragraphs: first impression or experience, practical details or tradeoffs, and an optional final judgment.
 - Sparse notes should be expanded through implications and careful phrasing, not invented facts or personal experience.
 - The voice should sound like a real person reviewing the item, not a manufacturer selling it.
+- Generated text should use only plain ASCII punctuation available on a standard US keyboard.
 - Suggested stars, generated review, and title are requested as JSON internally, then displayed as separate fields.
 
-Existing saved guidance is automatically upgraded when it lacks the newer `Priority`, `Avoid`, `Depth`, or `ReviewerVoice` fields.
+Existing saved guidance is automatically upgraded when it lacks any current default guidance field.
 
 ## Validation
 

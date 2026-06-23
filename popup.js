@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
     "Depth": "Be more narrative than terse. Expand on implications of the reviewer notes, but do not invent facts, usage details, defects, ownership duration, or personal experience. If notes are sparse, use careful phrasing such as 'seems,' 'looks,' or 'for this use case' instead of making claims.",
     "Tone": "Smart, direct, conversational, and dry. Warm but not polished into corporate oatmeal. Use subtle humor only when it fits. Prefer plain words, varied sentence length, and a real-person review voice.",
     "Avoid": "No preamble such as 'Okay, here's a review.' No markdown. No bold text. No pros/cons list unless the user specifically asks for it. No sales-copy phrasing, inflated praise, or manufacturer-style feature dumping.",
-    "Constraints": "Keep it suitable for Amazon. Do not mention receiving guidance, using AI, the product listing, or the user's notes."
+    "Constraints": "Keep it suitable for Amazon. Do not mention receiving guidance, using AI, the product listing, or the user's notes.",
+    "Punctuation": "Use only plain ASCII punctuation available on a standard US keyboard. Do not use em dashes, en dashes, curly quotes, ellipses, bullets, or decorative punctuation. Prefer commas, periods, colons, semicolons, parentheses, or short sentences."
   };
 
   chrome.storage.sync.get(['guidance', 'ollamaModel'], function(result) {
@@ -129,8 +130,9 @@ document.addEventListener('DOMContentLoaded', function() {
 function upgradeGuidance(savedGuidance, defaultGuidance) {
   try {
     const parsed = JSON.parse(savedGuidance);
+    const requiredFields = Object.keys(defaultGuidance);
 
-    if (parsed.Priority && parsed.Avoid && parsed.Depth && parsed.ReviewerVoice) {
+    if (requiredFields.every(field => Object.prototype.hasOwnProperty.call(parsed, field))) {
       return savedGuidance;
     }
 
